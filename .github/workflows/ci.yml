@@ -69,6 +69,20 @@ jobs:
           ruby-version: .ruby-version
           bundler-cache: true
 
+      - name: Wait for PostgreSQL to be ready
+        run: |
+          while ! nc -z localhost 5432; do
+            sleep 1
+          done
+          
+      - name: Setup test database
+        run: |
+          bin/rails db:create
+          bin/rails db:migrate
+        env:
+          RAILS_ENV: test
+          DATABASE_URL: postgres://postgres:postgres@localhost:5432
+
       - name: Run tests
         env:
           RAILS_ENV: test
