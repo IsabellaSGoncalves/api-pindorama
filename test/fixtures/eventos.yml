@@ -1,19 +1,14 @@
 # Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
 
 one:
-  titulo: MyString
-  conteudo: MyText
-  tags: [MyText]
-  url_imagem: MyString
-  local: MyString
-  data: 2025-09-20 00:24:38
-  autor: one
+  nome: MyString
+  foto: MyString
+  email: mystring1@example.com
+  senha: MyString
 
 two:
-  titulo: MyString
-  conteudo: MyText
-  tags: [MyText]
-  url_imagem: MyString
-  local: MyString
-  data: 2025-09-20 00:24:38
-  autor: two
+  nome: MyString
+  foto: MyString
+  email: mystring2@example.com
+  senha: MyString
+
