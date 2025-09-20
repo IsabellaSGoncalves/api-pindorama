@@ -3,7 +3,7 @@
 one:
   titulo: MyString
   conteudo: MyText
-  tags: MyText
+  tags: [MyText]
   url_imagem: MyString
   local: MyString
   data: 2025-09-20 00:24:38
@@ -12,7 +12,7 @@ one:
 two:
   titulo: MyString
   conteudo: MyText
-  tags: MyText
+  tags: [MyText]
   url_imagem: MyString
   local: MyString
   data: 2025-09-20 00:24:38
