@@ -3,11 +3,11 @@
 one:
   nome: MyString
   foto: MyString
-  email: MyString
+  email: MyString1
   senha: MyString
 
 two:
   nome: MyString
   foto: MyString
-  email: MyString
+  email: MyString2
   senha: MyString
