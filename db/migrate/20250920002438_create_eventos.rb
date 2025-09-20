@@ -6,7 +6,7 @@ class CreateEventos < ActiveRecord::Migration[8.0]
       t.text :tags, array:true, default:[]
       t.string :url_imagem
       t.string :local, null:false
-      t.datetime :data, null:false
+      t.column :data, :timestamptz, null:false
       
       t.references :autor, null: true, foreign_key: { on_delete: :nullify }
     end
