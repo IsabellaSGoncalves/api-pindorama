@@ -12,11 +12,17 @@ class AutorsControllerTest < ActionDispatch::IntegrationTest
 
   test "should create autor" do
     assert_difference("Autor.count") do
-      post autors_url, params: { autor: { email: @autor.email, foto: @autor.foto, nome: @autor.nome, senha: @autor.senha } }, as: :json
+      post autors_url, params: { autor: { 
+        email: "novo_email_#{SecureRandom.hex(4)}@exemplo.com", 
+        foto: @autor.foto, 
+        nome: @autor.nome, 
+        senha: @autor.senha 
+      } }, as: :json
     end
 
     assert_response :created
   end
+
 
   test "should show autor" do
     get autor_url(@autor), as: :json
