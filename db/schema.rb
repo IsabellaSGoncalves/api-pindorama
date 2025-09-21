@@ -26,6 +26,6 @@ ActiveRecord::Schema[8.0].define(version: 2025_09_20_034849) do
   enable_extension "extensions.uuid-ossp"
   # enable_extension "graphql.pg_graphql"
   enable_extension "pg_catalog.plpgsql"
-  enable_extension "vault.supabase_vault"
+  # enable_extension "vault.supabase_vault"
 
 end
