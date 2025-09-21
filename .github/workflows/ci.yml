@@ -45,7 +45,7 @@ jobs:
 
     services:
       postgres:
-        image: supabase/postgres:17.6.1.005
+        image: supabase/postgres:17.6.1.000
         env:
           POSTGRES_USER: postgres
           POSTGRES_PASSWORD: postgres
@@ -88,14 +88,13 @@ jobs:
       #     RAILS_ENV: test
       #     DATABASE_URL: postgres://postgres:postgres@localhost:5432
 
-      - name: Create supabase_admin role and setup test database
+      - name: Manually enable extensions and setup test database
         run: |
-          psql -U postgres -h localhost -c "CREATE ROLE supabase_admin WITH SUPERUSER LOGIN PASSWORD 'postgres';"
-          bin/rails db:drop db:create
-          bin/rails db:schema:load RAILS_ENV=test
-        env:
-          RAILS_ENV: test
-          DATABASE_URL: postgres://postgres:postgres@localhost:5432
+          psql -U postgres -h localhost -c "CREATE EXTENSION IF NOT EXISTS pgcrypto WITH SCHEMA extensions;"
+          psql -U postgres -h localhost -c "CREATE EXTENSION IF NOT EXISTS \"uuid-ossp\" WITH SCHEMA extensions;"
+          psql -U postgres -h localhost -c "CREATE EXTENSION IF NOT EXISTS \"pg_stat_statements\" WITH SCHEMA extensions;"
+          psql -U postgres -h localhost -c "CREATE EXTENSION IF NOT EXISTS \"pg_graphql\" WITH SCHEMA graphql;"
+          psql -U postgres -h localhost -c "CREATE EXTENSION IF NOT EXISTS \"supabase_vault\" WITH SCHEMA vault;"
           
       - name: Run tests
         env:
