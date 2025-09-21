@@ -56,9 +56,12 @@ jobs:
           --health-interval 10s
           --health-timeout 5s
           --health-retries 3
-        # command: >
-        #     /bin/sh -c "psql -U postgres -c 'CREATE ROLE supabase_admin WITH SUPERUSER LOGIN PASSWORD ''postgres'';' && exec /usr/local/bin/docker-entrypoint.sh postgres"
-
+      command: >
+        bash -c "docker-entrypoint.sh postgres &
+                sleep 5 &&
+                psql -U postgres -c \"CREATE ROLE supabase_admin WITH SUPERUSER LOGIN PASSWORD 'postgres';\" &&
+                wait"
+                
     steps:
       - name: Install packages
         run: sudo apt-get update && sudo apt-get install --no-install-recommends -y build-essential git libpq-dev libyaml-dev pkg-config
