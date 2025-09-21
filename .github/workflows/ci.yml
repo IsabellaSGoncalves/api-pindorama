@@ -47,21 +47,16 @@ jobs:
       postgres:
         image: supabase/postgres:17.6.1.000
         env:
-          POSTGRES_USER: postgres
-          POSTGRES_PASSWORD: postgres
-          SUPABASE_ADMIN_PASSWORD: postgres
+          POSTGRES_USER: supabase_admin
+          POSTGRES_PASSWORD: supabase_password
+          POSTGRES_DB: postgres
         ports:
           - 5432:5432
         options: >-
-          --health-cmd "pg_isready"
+          --health-cmd="pg_isready -U supabase_admin -d postgres"
           --health-interval 10s
           --health-timeout 5s
           --health-retries 3
-      # command: >
-      #   bash -c "docker-entrypoint.sh postgres &
-      #           sleep 5 &&
-      #           psql -U postgres -c \"CREATE ROLE supabase_admin WITH SUPERUSER LOGIN PASSWORD 'postgres';\" &&
-      #           wait"
 
     steps:
       - name: Install packages
@@ -79,11 +74,14 @@ jobs:
       - name: Install dependencies
         run: bundle install --jobs 4 --retry 3
 
-      - name: Wait for PostgreSQL to be ready
+      - name: Create supabase_admin user
         run: |
-          while ! nc -z localhost 5432; do
-            sleep 1
-          done
+            PGPASSWORD=postgres psql -h localhost -U postgres -d postgres -c "CREATE USER supabase_admin WITH PASSWORD 'supabase_password' CREATEDB CREATEROLE;"
+      # - name: Wait for PostgreSQL to be ready
+      #   run: |
+      #     while ! nc -z localhost 5432; do
+      #       sleep 1
+      #     done
 
       - name: Reset and setup test database
         run: |
@@ -91,10 +89,10 @@ jobs:
           bin/rails db:schema:load RAILS_ENV=test
         env:
           RAILS_ENV: test
-          DATABASE_URL: postgres://postgres:postgres@localhost:5432
+          DATABASE_URL: postgres://supabase_admin:supabase_password@localhost:5432/postgres
 
       - name: Run tests
         env:
           RAILS_ENV: test
-          DATABASE_URL: postgres://postgres:postgres@localhost:5432
+          DATABASE_URL: postgres://supabase_admin:supabase_password@localhost:5432/postgres
         run: bin/rails test
