@@ -46,6 +46,6 @@ class ArtigosController < ApplicationController
 
     # Only allow a list of trusted parameters through.
     def artigo_params
-      params.expect(artigo: [ :titulo, :conteudo, :tags, :url_imagem, :local, :data, :autor_id ])
+      params.expect(artigo: [ :titulo, :conteudo, :tags, :url_imagem, :local, :data, :autor_id, :status ])
     end
 end

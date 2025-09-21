@@ -18,7 +18,7 @@ class EventosController < ApplicationController
     @evento = Evento.new(evento_params)
 
     if @evento.save
-      render json: @evento, status: :created, location: @evento
+      render { message: "evento criado", json: @evento }, status: :created, location: @evento
     else
       render json: @evento.errors, status: :unprocessable_entity
     end
@@ -46,6 +46,6 @@ class EventosController < ApplicationController
 
     # Only allow a list of trusted parameters through.
     def evento_params
-      params.expect(evento: [ :titulo, :conteudo, :tags, :url_imagem, :local, :data, :autor_id ])
+      params.expect(evento: [ :titulo, :conteudo, :tags, :url_imagem, :local, :data, :autor_id, :status ])
     end
 end
