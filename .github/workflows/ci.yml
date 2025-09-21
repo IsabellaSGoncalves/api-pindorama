@@ -3,7 +3,7 @@ name: CI
 on:
   pull_request:
   push:
-    branches: [ main ]
+    branches: [main]
 
 jobs:
   scan_ruby:
@@ -40,57 +40,57 @@ jobs:
       - name: Lint code for consistent style
         run: bin/rubocop -f github
 
-    test:
-      runs-on: ubuntu-latest
+  test:
+    runs-on: ubuntu-latest
 
-      services:
-        postgres:
-          image: supabase/postgres:17.6.1.000
-          env:
-            POSTGRES_USER: postgres
-            POSTGRES_PASSWORD: postgres
-          ports:
-            - 5432:5432
-          options: >-
-            --health-cmd "pg_isready"
-            --health-interval 10s
-            --health-timeout 5s
-            --health-retries 3
-          command: >
-            /bin/sh -c "psql -U postgres -c 'CREATE ROLE supabase_admin WITH SUPERUSER LOGIN PASSWORD ''postgres'';' && exec /usr/local/bin/docker-entrypoint.sh postgres"
+    services:
+      postgres:
+        image: supabase/postgres:17.6.1.000
+        env:
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: postgres
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd "pg_isready"
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 3
+        # command: >
+        #     /bin/sh -c "psql -U postgres -c 'CREATE ROLE supabase_admin WITH SUPERUSER LOGIN PASSWORD ''postgres'';' && exec /usr/local/bin/docker-entrypoint.sh postgres"
 
-      steps:
-        - name: Install packages
-          run: sudo apt-get update && sudo apt-get install --no-install-recommends -y build-essential git libpq-dev libyaml-dev pkg-config
+    steps:
+      - name: Install packages
+        run: sudo apt-get update && sudo apt-get install --no-install-recommends -y build-essential git libpq-dev libyaml-dev pkg-config
 
-        - name: Checkout code
-          uses: actions/checkout@v4
+      - name: Checkout code
+        uses: actions/checkout@v4
 
-        - name: Set up Ruby
-          uses: ruby/setup-ruby@v1
-          with:
-            ruby-version: .ruby-version
-            bundler-cache: true
+      - name: Set up Ruby
+        uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: .ruby-version
+          bundler-cache: true
 
-        - name: Install dependencies
-          run: bundle install --jobs 4 --retry 3
+      - name: Install dependencies
+        run: bundle install --jobs 4 --retry 3
 
-        - name: Wait for PostgreSQL to be ready
-          run: |
-            while ! nc -z localhost 5432; do
-              sleep 1
-            done
-            
-        - name: Reset and setup test database
-          run: |
-            bin/rails db:drop db:create
-            bin/rails db:schema:load RAILS_ENV=test
-          env:
-            RAILS_ENV: test
-            DATABASE_URL: postgres://postgres:postgres@localhost:5432
-            
-        - name: Run tests
-          env:
-            RAILS_ENV: test
-            DATABASE_URL: postgres://postgres:postgres@localhost:5432
-          run: bin/rails test
+      - name: Wait for PostgreSQL to be ready
+        run: |
+          while ! nc -z localhost 5432; do
+            sleep 1
+          done
+
+      - name: Reset and setup test database
+        run: |
+          bin/rails db:drop db:create
+          bin/rails db:schema:load RAILS_ENV=test
+        env:
+          RAILS_ENV: test
+          DATABASE_URL: postgres://postgres:postgres@localhost:5432
+
+      - name: Run tests
+        env:
+          RAILS_ENV: test
+          DATABASE_URL: postgres://postgres:postgres@localhost:5432
+        run: bin/rails test
