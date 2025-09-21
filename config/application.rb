@@ -34,8 +34,13 @@ module Pindorama
 
     config.middleware.insert_before 0, Rack::Cors do
       allow do
-        origins ENV["CORS_ORIGIN"] || "*"
-
+        if Rails.env.development?
+          origins "http://localhost:5173"
+        elsif Rails.env.production?
+          origins ENV["CORS_ORIGIN"] || "*"
+        else
+          origins "https://localhost"
+        end
         resource "*",
         headers: :any,
         methods: [ :get, :post, :options ],
