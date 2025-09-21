@@ -52,14 +52,16 @@ jobs:
           # SUPABASE_DB_ADMIN_PASSWORD: 'postgres'
         ports:
           - 5432:5432
-        options: >-
-          --health-cmd pg_isready
-          --health-interval 10s
-          --health-timeout 5s
-          --health-retries 3
+        options: --health-cmd="pg_isready" --health-interval=10s --health-timeout=5s --health-retries=3
         command: >
           -c "psql -U postgres -c 'CREATE ROLE supabase_admin WITH SUPERUSER LOGIN PASSWORD 'postgres';'"
           -c "exec /usr/local/bin/docker-entrypoint.sh postgres"
+
+      # redis:
+      #   image: redis
+      #   ports:
+      #     - 6379:6379
+      #   options: --health-cmd "redis-cli ping" --health-interval 10s --health-timeout 5s --health-retries 5
 
     steps:
       - name: Install packages
@@ -82,7 +84,14 @@ jobs:
           while ! nc -z localhost 5432; do
             sleep 1
           done
-      
+          
+      # - name: Reset and setup test database
+      #   run: |
+      #     bin/rails db:drop db:create db:migrate RAILS_ENV=test
+      #   env:
+      #     RAILS_ENV: test
+      #     DATABASE_URL: postgres://postgres:postgres@localhost:5432
+
       - name: Reset and setup test database
         run: |
           bin/rails db:drop db:create
@@ -90,9 +99,10 @@ jobs:
         env:
           RAILS_ENV: test
           DATABASE_URL: postgres://postgres:postgres@localhost:5432
-
+          
       - name: Run tests
         env:
           RAILS_ENV: test
           DATABASE_URL: postgres://postgres:postgres@localhost:5432
+          # REDIS_URL: redis://localhost:6379/0
         run: bin/rails test
