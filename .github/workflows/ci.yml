@@ -81,13 +81,19 @@ jobs:
             sleep 1
           done
           
-      - name: Reset and setup test database
-        run: |
-          bin/rails db:drop db:create db:migrate RAILS_ENV=test
+      # - name: Reset and setup test database
+      #   run: |
+      #     bin/rails db:drop db:create db:migrate RAILS_ENV=test
+      #   env:
+      #     RAILS_ENV: test
+      #     DATABASE_URL: postgres://postgres:postgres@localhost:5432
+
+      - name: Load database schema
+        run: bin/rails db:schema:load RAILS_ENV=test
         env:
           RAILS_ENV: test
           DATABASE_URL: postgres://postgres:postgres@localhost:5432
-
+      
       - name: Run tests
         env:
           RAILS_ENV: test
