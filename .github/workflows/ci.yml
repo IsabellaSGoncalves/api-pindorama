@@ -88,8 +88,9 @@ jobs:
       #     RAILS_ENV: test
       #     DATABASE_URL: postgres://postgres:postgres@localhost:5432
 
-      - name: Enable extensions and setup test database
+      - name: Create supabase_admin role and setup test database
         run: |
+          psql -U postgres -h localhost -c "CREATE ROLE supabase_admin WITH SUPERUSER LOGIN PASSWORD 'postgres';"
           bin/rails db:drop db:create
           bin/rails db:schema:load RAILS_ENV=test
         env:
