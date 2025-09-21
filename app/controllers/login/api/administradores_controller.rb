@@ -12,6 +12,17 @@ module Api
                 render json: { error: "Senha incorreta" }, status: :unauthorized
               end
             end
+
+            def sessao
+                if session[:autor_id]
+                  render json: {
+                  autor_id: session[:autor_id],
+                  autor_nome: session[:autor_nome]
+                  }, status: :ok
+                else
+                  render json: { error: "Sessão não encontrada" }, status: :unauthorized
+                end
+            end
     end
 end
 end

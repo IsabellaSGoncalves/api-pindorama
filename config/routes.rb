@@ -9,5 +9,11 @@ Rails.application.routes.draw do
     end
   end
 
+  namespace :login do
+    namespace :api do
+      get "administradores", to: "administradores#sessao"
+    end
+  end
+
   get "up" => "rails/health#show", as: :rails_health_check
 end
