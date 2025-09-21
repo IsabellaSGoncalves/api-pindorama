@@ -78,9 +78,15 @@ jobs:
       #     while ! nc -z localhost 5432; do
       #       sleep 1
       #     done
+      - name: Set Rails environment for schema
+        run: bin/rails db:environment:set RAILS_ENV=test
+        env:
+          RAILS_ENV: test
+          DATABASE_URL: postgres://supabase_admin:supabase_password@localhost:5432/postgres
 
       - name: Reset and setup test database
         run: |
+          bin/rails db:environment:set RAILS_ENV=test
           bin/rails db:drop db:create
           bin/rails db:schema:load RAILS_ENV=test
         env:
