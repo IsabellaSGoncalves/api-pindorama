@@ -87,6 +87,7 @@ jobs:
       - name: Reset and setup test database
         run: |
           bin/rails db:environment:set RAILS_ENV=test
+          PGPASSWORD=supabase_password psql -h localhost -U supabase_admin -d postgres -c "SELECT pg_terminate_backend(pg_stat_activity.pid) FROM pg_stat_activity WHERE pg_stat_activity.datname = 'postgres' AND pid <> pg_backend_pid();"
           bin/rails db:reset
         env:
           RAILS_ENV: test
