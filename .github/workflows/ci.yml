@@ -87,18 +87,15 @@ jobs:
       #   env:
       #     RAILS_ENV: test
       #     DATABASE_URL: postgres://postgres:postgres@localhost:5432
-      - name: Create test database
-        run: bin/rails db:create RAILS_ENV=test
-        env:
-          RAILS_ENV: test
-          DATABASE_URL: postgres://postgres:postgres@localhost:5432
 
-      - name: Load database schema
-        run: bin/rails db:schema:load RAILS_ENV=test
+      - name: Enable extensions and setup test database
+        run: |
+          bin/rails db:drop db:create
+          bin/rails db:schema:load RAILS_ENV=test
         env:
           RAILS_ENV: test
           DATABASE_URL: postgres://postgres:postgres@localhost:5432
-      
+          
       - name: Run tests
         env:
           RAILS_ENV: test
