@@ -47,7 +47,7 @@ jobs:
       postgres:
         image: supabase/postgres:17.6.1.000
         env:
-          POSTGRES_PASSWORD: postgres
+          POSTGRES_PASSWORD: supabase_password 
           POSTGRES_DB: postgres
         ports:
           - 5432:5432
@@ -73,10 +73,6 @@ jobs:
       - name: Install dependencies
         run: bundle install --jobs 4 --retry 3
 
-      - name: Create supabase_admin user
-        run: |
-          PGPASSWORD=postgres psql -h localhost -U postgres -d postgres \
-            -c "CREATE USER supabase_admin WITH PASSWORD 'supabase_password' CREATEDB CREATEROLE;"
       # - name: Wait for PostgreSQL to be ready
       #   run: |
       #     while ! nc -z localhost 5432; do
