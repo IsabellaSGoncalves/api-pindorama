@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_09_20_034849) do
+ActiveRecord::Schema[8.0].define(version: 2025_09_20_002438) do
   create_schema "auth"
   create_schema "extensions"
   create_schema "graphql"
@@ -24,8 +24,38 @@ ActiveRecord::Schema[8.0].define(version: 2025_09_20_034849) do
   enable_extension "extensions.pg_stat_statements"
   enable_extension "extensions.pgcrypto"
   enable_extension "extensions.uuid-ossp"
-  enable_extension "graphql.pg_graphql"
   enable_extension "pg_catalog.plpgsql"
-  enable_extension "vault.supabase_vault"
 
+  create_table "artigos", force: :cascade do |t|
+    t.string "titulo", null: false
+    t.text "conteudo", null: false
+    t.text "tags", default: [], array: true
+    t.string "url_imagem"
+    t.string "local", null: false
+    t.timestamptz "data", default: -> { "timezone('America/Sao_Paulo'::text, now())" }
+    t.bigint "autor_id"
+    t.index ["autor_id"], name: "index_artigos_on_autor_id"
+  end
+
+  create_table "autors", force: :cascade do |t|
+    t.string "nome", null: false
+    t.string "foto"
+    t.string "email", null: false
+    t.string "senha", null: false
+    t.index ["email"], name: "index_autors_on_email", unique: true
+  end
+
+  create_table "eventos", force: :cascade do |t|
+    t.string "titulo", null: false
+    t.text "conteudo", null: false
+    t.text "tags", default: [], array: true
+    t.string "url_imagem"
+    t.string "local", null: false
+    t.timestamptz "data", null: false
+    t.bigint "autor_id"
+    t.index ["autor_id"], name: "index_eventos_on_autor_id"
+  end
+
+  add_foreign_key "artigos", "autors", on_delete: :nullify
+  add_foreign_key "eventos", "autors", on_delete: :nullify
 end
