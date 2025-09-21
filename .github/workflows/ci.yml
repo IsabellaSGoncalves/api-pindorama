@@ -49,6 +49,7 @@ jobs:
         env:
           POSTGRES_USER: postgres
           POSTGRES_PASSWORD: postgres
+          SUPABASE_ADMIN_PASSWORD: postgres
         ports:
           - 5432:5432
         options: >-
@@ -56,12 +57,12 @@ jobs:
           --health-interval 10s
           --health-timeout 5s
           --health-retries 3
-      command: >
-        bash -c "docker-entrypoint.sh postgres &
-                sleep 5 &&
-                psql -U postgres -c \"CREATE ROLE supabase_admin WITH SUPERUSER LOGIN PASSWORD 'postgres';\" &&
-                wait"
-                
+      # command: >
+      #   bash -c "docker-entrypoint.sh postgres &
+      #           sleep 5 &&
+      #           psql -U postgres -c \"CREATE ROLE supabase_admin WITH SUPERUSER LOGIN PASSWORD 'postgres';\" &&
+      #           wait"
+
     steps:
       - name: Install packages
         run: sudo apt-get update && sudo apt-get install --no-install-recommends -y build-essential git libpq-dev libyaml-dev pkg-config
