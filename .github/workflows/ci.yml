@@ -87,7 +87,7 @@ jobs:
       - name: Reset and setup test database
         run: |
           bin/rails db:environment:set RAILS_ENV=test
-          bin/rails db:drop db:create db:schema:load
+          bin/rails db:reset
         env:
           RAILS_ENV: test
           DATABASE_URL: postgres://supabase_admin:supabase_password@localhost:5432/postgres
