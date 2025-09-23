@@ -3,7 +3,7 @@ name: CI
 on:
   pull_request:
   push:
-    branches: [ main ]
+    branches: [main]
 
 jobs:
   scan_ruby:
@@ -34,6 +34,9 @@ jobs:
           ruby-version: .ruby-version
           bundler-cache: true
 
+      - name: Auto-correct Ruby code with RuboCop
+        run: bin/rubocop -A
+
       - name: Lint code for consistent style
         run: bin/rubocop -f github
 
@@ -42,19 +45,18 @@ jobs:
 
     services:
       postgres:
-        image: postgres
+        image: supabase/postgres:17.6.1.000
         env:
-          POSTGRES_USER: postgres
-          POSTGRES_PASSWORD: postgres
+          POSTGRES_USER: supabase_admin
+          POSTGRES_PASSWORD: supabase_password
+          POSTGRES_DB: postgres
         ports:
           - 5432:5432
-        options: --health-cmd="pg_isready" --health-interval=10s --health-timeout=5s --health-retries=3
-
-      # redis:
-      #   image: redis
-      #   ports:
-      #     - 6379:6379
-      #   options: --health-cmd "redis-cli ping" --health-interval 10s --health-timeout 5s --health-retries 5
+        options: >-
+          --health-cmd="pg_isready -U supabase_admin -d postgres"
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 3
 
     steps:
       - name: Install packages
@@ -69,23 +71,20 @@ jobs:
           ruby-version: .ruby-version
           bundler-cache: true
 
-      - name: Wait for PostgreSQL to be ready
+      - name: Install dependencies
+        run: bundle install --jobs 4 --retry 3
+
+      - name: Reset and setup test database
         run: |
-          while ! nc -z localhost 5432; do
-            sleep 1
-          done
-          
-      - name: Setup test database
-        run: |
-          bin/rails db:create
-          bin/rails db:migrate
+          PGPASSWORD=supabase_password psql -h localhost -U supabase_admin -d postgres -c \
+            "DROP DATABASE IF EXISTS pindorama_test WITH (FORCE);"
+          bin/rails db:create db:schema:load
         env:
           RAILS_ENV: test
-          DATABASE_URL: postgres://postgres:postgres@localhost:5432
+          DATABASE_URL: postgres://supabase_admin:supabase_password@localhost:5432/pindorama_test
 
       - name: Run tests
         env:
           RAILS_ENV: test
-          DATABASE_URL: postgres://postgres:postgres@localhost:5432
-          # REDIS_URL: redis://localhost:6379/0
-        run: bin/rails db:test:prepare test
+          DATABASE_URL: postgres://supabase_admin:supabase_password@localhost:5432/pindorama_test
+        run: bin/rails test
