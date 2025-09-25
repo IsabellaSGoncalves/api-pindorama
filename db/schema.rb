@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_09_20_002438) do
+ActiveRecord::Schema[8.0].define(version: 2025_09_25_020742) do
   create_schema "auth"
   create_schema "extensions"
   create_schema "graphql"
@@ -24,7 +24,9 @@ ActiveRecord::Schema[8.0].define(version: 2025_09_20_002438) do
   enable_extension "extensions.pg_stat_statements"
   enable_extension "extensions.pgcrypto"
   enable_extension "extensions.uuid-ossp"
+  enable_extension "graphql.pg_graphql"
   enable_extension "pg_catalog.plpgsql"
+  enable_extension "vault.supabase_vault"
 
   create_table "artigos", force: :cascade do |t|
     t.string "titulo", null: false
@@ -34,6 +36,7 @@ ActiveRecord::Schema[8.0].define(version: 2025_09_20_002438) do
     t.string "local", null: false
     t.timestamptz "data", default: -> { "timezone('America/Sao_Paulo'::text, now())" }
     t.bigint "autor_id"
+    t.string "status", default: "rascunho", null: false
     t.index ["autor_id"], name: "index_artigos_on_autor_id"
   end
 
@@ -53,6 +56,7 @@ ActiveRecord::Schema[8.0].define(version: 2025_09_20_002438) do
     t.string "local", null: false
     t.timestamptz "data", null: false
     t.bigint "autor_id"
+    t.string "status", default: "rascunho", null: false
     t.index ["autor_id"], name: "index_eventos_on_autor_id"
   end
 

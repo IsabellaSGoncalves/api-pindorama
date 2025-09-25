@@ -12,7 +12,7 @@ class ArtigosControllerTest < ActionDispatch::IntegrationTest
 
   test "should create artigo" do
     assert_difference("Artigo.count") do
-      post artigos_url, params: { artigo: { autor_id: @artigo.autor_id, conteudo: @artigo.conteudo, data: @artigo.data, local: @artigo.local, tags: @artigo.tags, titulo: @artigo.titulo, url_imagem: @artigo.url_imagem } }, as: :json
+      post artigos_url, params: { artigo: { autor_id: @artigo.autor_id, conteudo: @artigo.conteudo, data: @artigo.data, local: @artigo.local, tags: @artigo.tags, titulo: @artigo.titulo, url_imagem: @artigo.url_imagem, status: @artigo.status } }, as: :json
     end
 
     assert_response :created
@@ -24,7 +24,7 @@ class ArtigosControllerTest < ActionDispatch::IntegrationTest
   end
 
   test "should update artigo" do
-    patch artigo_url(@artigo), params: { artigo: { autor_id: @artigo.autor_id, conteudo: @artigo.conteudo, data: @artigo.data, local: @artigo.local, tags: @artigo.tags, titulo: @artigo.titulo, url_imagem: @artigo.url_imagem } }, as: :json
+    patch artigo_url(@artigo), params: { artigo: { autor_id: @artigo.autor_id, conteudo: @artigo.conteudo, data: @artigo.data, local: @artigo.local, tags: @artigo.tags, titulo: @artigo.titulo, url_imagem: @artigo.url_imagem, status: "publicado" } }, as: :json
     assert_response :success
   end
 
