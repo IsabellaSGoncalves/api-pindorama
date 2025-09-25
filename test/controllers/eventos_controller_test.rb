@@ -12,7 +12,7 @@ class EventosControllerTest < ActionDispatch::IntegrationTest
 
   test "should create evento" do
     assert_difference("Evento.count") do
-      post eventos_url, params: { evento: { autor_id: @evento.autor_id, conteudo: @evento.conteudo, data: @evento.data, local: @evento.local, tags: @evento.tags, titulo: @evento.titulo, url_imagem: @evento.url_imagem } }, as: :json
+      post eventos_url, params: { evento: { autor_id: @evento.autor_id, conteudo: @evento.conteudo, data: @evento.data, local: @evento.local, tags: @evento.tags, titulo: @evento.titulo, url_imagem: @evento.url_imagem, status: @evento.status } }, as: :json
     end
 
     assert_response :created
@@ -24,7 +24,7 @@ class EventosControllerTest < ActionDispatch::IntegrationTest
   end
 
   test "should update evento" do
-    patch evento_url(@evento), params: { evento: { autor_id: @evento.autor_id, conteudo: @evento.conteudo, data: @evento.data, local: @evento.local, tags: @evento.tags, titulo: @evento.titulo, url_imagem: @evento.url_imagem } }, as: :json
+    patch evento_url(@evento), params: { evento: { autor_id: @evento.autor_id, conteudo: @evento.conteudo, data: @evento.data, local: @evento.local, tags: @evento.tags, titulo: @evento.titulo, url_imagem: @evento.url_imagem, status:"publicado" } }, as: :json
     assert_response :success
   end
 
