@@ -15,7 +15,17 @@ class ArtigosController < ApplicationController
 
   # POST /artigos
   def create
-    @artigo = Artigo.new(artigo_params)
+    uploaded_image = params[:imagem]
+
+    image_url = nil
+    if uploaded_image.present? # Se uma imagem foi enviada
+      # Dá upload na imagem e armazena os dados em result
+      result = Cloudinary::Uploader.upload(uploaded_image)
+      # Pega a URL da imagem a partir do resultado do upload
+      image_url = result["secure_url"]
+    end
+    # Cria um novo artigo com os parametros
+    @artigo = Artigo.new(artigo_params.merge(url_imagem: image_url))
 
     if @artigo.save
       render json: @artigo, status: :created, location: @artigo
@@ -46,6 +56,6 @@ class ArtigosController < ApplicationController
 
     # Only allow a list of trusted parameters through.
     def artigo_params
-      params.expect(artigo: [ :titulo, :conteudo, :tags, :url_imagem, :local, :data, :autor_id, :status ])
+      params.require(artigo: [ :titulo, :conteudo, :local, :data, :autor_id, :status, { tags: [] } ])
     end
 end
