@@ -6,58 +6,91 @@ on:
     branches: [main]
 
 jobs:
-  test:
-    runs-on: ubuntu-latest
+    scan_ruby:
+      runs-on: ubuntu-latest
 
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
+      steps:
+        - name: Checkout code
+          uses: actions/checkout@v4
 
-      - name: Login to Docker Hub
-        uses: docker/login-action@v2
-        with:
-          username: ${{ secrets.DOCKERHUB_USERNAME }}
-          password: ${{ secrets.DOCKERHUB_TOKEN }}
-      
-      - name: Run PostgreSQL container
-        run: |
-          docker run -d --name postgres_db \
-            -e POSTGRES_USER=supabase_admin \
-            -e POSTGRES_PASSWORD=supabase_password \
-            -e POSTGRES_DB=postgres \
-            -p 5432:5432 \
-            supabase/postgres:17.6.1.000
-      
-      - name: Wait for database to be ready
-        run: |
-          for i in `seq 1 10`; do
-            docker exec postgres_db pg_isready -U supabase_admin -d postgres && break
-            sleep 1
-          done
+        - name: Set up Ruby
+          uses: ruby/setup-ruby@v1
+          with:
+            ruby-version: .ruby-version
+            bundler-cache: true
 
-      - name: Install packages
-        run: sudo apt-get update && sudo apt-get install --no-install-recommends -y build-essential git libpq-dev libyaml-dev pkg-config
+        - name: Scan for common Rails security vulnerabilities using static analysis
+          run: bin/brakeman --no-pager
+    lint:
+      runs-on: ubuntu-latest
+      steps:
+        - name: Checkout code
+          uses: actions/checkout@v4
 
-      - name: Set up Ruby
-        uses: ruby/setup-ruby@v1
-        with:
-          ruby-version: .ruby-version
-          bundler-cache: true
+        - name: Set up Ruby
+          uses: ruby/setup-ruby@v1
+          with:
+            ruby-version: .ruby-version
+            bundler-cache: true
 
-      - name: Install dependencies
-        run: bundle install --jobs 4 --retry 3
+        - name: Auto-correct Ruby code with RuboCop
+          run: bin/rubocop -A
 
-      - name: Reset and setup test database
-        run: |
-          PGPASSWORD=supabase_password psql -h localhost -U supabase_admin -d postgres -c \
-            "DROP DATABASE IF EXISTS pindorama_test WITH (FORCE);"
-          bin/rails db:create db:schema:load
-        env:
-          RAILS_ENV: test
-          DATABASE_URL: postgres://supabase_admin:supabase_password@localhost:5432/pindorama_test
+        - name: Lint code for consistent style
+          run: bin/rubocop -f github
+  
+    test:
+      runs-on: ubuntu-latest
 
-      - name: Run tests
-        env:
-          RAILS_ENV: test
-          DATABASE_URL: postgres://supabase_admin:supabase_password@localhost:5432/pindorama_test
-        run: bin/rails test
+      steps:
+        - name: Checkout code
+          uses: actions/checkout@v4
+
+        - name: Login to Docker Hub
+          uses: docker/login-action@v2
+          with:
+            username: ${{ secrets.DOCKERHUB_USERNAME }}
+            password: ${{ secrets.DOCKERHUB_TOKEN }}
+        
+        - name: Run PostgreSQL container
+          run: |
+            docker run -d --name postgres_db \
+              -e POSTGRES_USER=supabase_admin \
+              -e POSTGRES_PASSWORD=supabase_password \
+              -e POSTGRES_DB=postgres \
+              -p 5432:5432 \
+              supabase/postgres:17.6.1.000
+        
+        - name: Wait for database to be ready
+          run: |
+            for i in `seq 1 10`; do
+              docker exec postgres_db pg_isready -U supabase_admin -d postgres && break
+              sleep 1
+            done
+
+        - name: Install packages
+          run: sudo apt-get update && sudo apt-get install --no-install-recommends -y build-essential git libpq-dev libyaml-dev pkg-config
+
+        - name: Set up Ruby
+          uses: ruby/setup-ruby@v1
+          with:
+            ruby-version: .ruby-version
+            bundler-cache: true
+
+        - name: Install dependencies
+          run: bundle install --jobs 4 --retry 3
+
+        - name: Reset and setup test database
+          run: |
+            PGPASSWORD=supabase_password psql -h localhost -U supabase_admin -d postgres -c \
+              "DROP DATABASE IF EXISTS pindorama_test WITH (FORCE);"
+            bin/rails db:create db:schema:load
+          env:
+            RAILS_ENV: test
+            DATABASE_URL: postgres://supabase_admin:supabase_password@localhost:5432/pindorama_test
+
+        - name: Run tests
+          env:
+            RAILS_ENV: test
+            DATABASE_URL: postgres://supabase_admin:supabase_password@localhost:5432/pindorama_test
+          run: bin/rails test
