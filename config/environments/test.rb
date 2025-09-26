@@ -41,7 +41,7 @@ Rails.application.configure do
 
   # Print deprecation notices to the stderr.
   config.active_support.deprecation = :stderr
-  config.force_ssl = true
+
   # Raises error for missing translations.
   # config.i18n.raise_on_missing_translations = true
 
@@ -50,9 +50,4 @@ Rails.application.configure do
 
   # Raise error when a before_action's only/except options reference missing actions.
   config.action_controller.raise_on_missing_callback_actions = true
-    config.session_store :cookie_store,
-    key: "_pindorama_session",
-    same_site: :none,
-    secure: true,
-    expire_after: 4.hours
 end
