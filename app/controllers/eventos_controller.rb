@@ -31,8 +31,8 @@ class EventosController < ApplicationController
     end
 
     # O `evento_params` pega os dados como título, conteúdo, tags, etc...
-    # O `.merge(url_imagem: image_url)` adiciona a URL da img ao Cloudinary.
-    @evento = Evento.new(evento_params.merge(url_imagem: image_url))
+    # Ajustado para usar urlImagemEvento: image_url
+    @evento = Evento.new(evento_params.merge(urlImagemEvento: image_url))
 
     if @evento.save
       render json: @evento, status: :created, location: @evento
@@ -54,8 +54,8 @@ class EventosController < ApplicationController
     #parâmetros para a atualização.
     update_params = evento_params
     
-    # Só adiciona a URL da imagem se uma nova imagem foi enviada; evitando apagar a URL da img se o usuário não adicionar nv img
-    update_params = update_params.merge(url_imagem: image_url) if image_url.present?
+    # Ajustado para usar urlImagemEvento: image_url
+    update_params = update_params.merge(urlImagemEvento: image_url) if image_url.present?
 
     if @evento.update(update_params)
       render json: @evento
@@ -76,16 +76,16 @@ class EventosController < ApplicationController
     end
 
     # - `:imagem_capa` é um parâmetro permitido para que possamos acessar pelo controller antes de subir 
-    # - `tags: []` recebe o array de tags
+    # - `tagsEvento: []` recebe o array de tags
     def evento_params
       params.require(:evento).permit(
-        :titulo, 
-        :conteudo, 
-        :data, 
-        :local_link, 
-        :autor_id, 
+        :tituloEvento, 
+        :conteudoEvento, 
+        :dataEvento, 
+        :localEvento, 
+        :autorEvento, 
         :imagem_capa,
-        tags: []
+        tagsEvento: []
       )
     end
 end
