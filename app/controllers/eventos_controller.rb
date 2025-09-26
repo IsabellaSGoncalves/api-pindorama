@@ -18,7 +18,21 @@ class EventosController < ApplicationController
 
   # POST /eventos
   def create
-    @evento = Evento.new(evento_params)
+    # mantive o imagem_capa porque é assim que é enviado do hook
+    uploaded_image = params[:evento][:imagem_capa]
+
+    image_url = nil
+    if uploaded_image.present?
+      # copiei na cara dura da Anahí esse trecho da imagem para o Cloudinary, incluindo a URL da imagem, é armazenado na variável `result`.
+      result = Cloudinary::Uploader.upload(uploaded_image)
+      
+      # Extrai a URL do resultado do upload.
+      image_url = result["secure_url"]
+    end
+
+    # O `evento_params` pega os dados como título, conteúdo, tags, etc...
+    # O `.merge(url_imagem: image_url)` adiciona a URL da img ao Cloudinary.
+    @evento = Evento.new(evento_params.merge(url_imagem: image_url))
 
     if @evento.save
       render json: @evento, status: :created, location: @evento
@@ -29,7 +43,21 @@ class EventosController < ApplicationController
 
   # PATCH/PUT /eventos/1
   def update
-    if @evento.update(evento_params)
+  uploaded_image = params[:evento][:imagem_capa]
+    image_url = nil
+
+    if uploaded_image.present?
+      result = Cloudinary::Uploader.upload(uploaded_image)
+      image_url = result["secure_url"]
+    end
+
+    #parâmetros para a atualização.
+    update_params = evento_params
+    
+    # Só adiciona a URL da imagem se uma nova imagem foi enviada; evitando apagar a URL da img se o usuário não adicionar nv img
+    update_params = update_params.merge(url_imagem: image_url) if image_url.present?
+
+    if @evento.update(update_params)
       render json: @evento
     else
       render json: @evento.errors, status: :unprocessable_entity
@@ -42,13 +70,22 @@ class EventosController < ApplicationController
   end
 
   private
-    # Use callbacks to share common setup or constraints between actions.
+    # O `set_evento` foi ajustado para `params[:id]`
     def set_evento
-      @evento = Evento.find(params.expect(:id))
+      @evento = Evento.find(params[:id])
     end
 
-    # Only allow a list of trusted parameters through.
+    # - `:imagem_capa` é um parâmetro permitido para que possamos acessar pelo controller antes de subir 
+    # - `tags: []` recebe o array de tags
     def evento_params
-      params.expect(evento: [ :titulo, :conteudo, :tags, :url_imagem, :local, :data, :autor_id ])
+      params.require(:evento).permit(
+        :titulo, 
+        :conteudo, 
+        :data, 
+        :local_link, 
+        :autor_id, 
+        :imagem_capa,
+        tags: []
+      )
     end
 end
