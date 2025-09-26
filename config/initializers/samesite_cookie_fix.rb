@@ -6,8 +6,13 @@ class ForceSameSiteNoneMiddleware
   def call(env)
     status, headers, response = @app.call(env)
 
-    if headers['Set-Cookie']
-      headers['Set-Cookie'] = headers['Set-Cookie'].gsub(/SameSite=Lax/, 'SameSite=None; Secure')
+    if headers["Set-Cookie"]
+      cookies = headers["Set-Cookie"].split("\n").map do |cookie|
+        cookie = cookie.gsub(/;?\s*SameSite=[^;]*/, "")
+        cookie += "; SameSite=None; Secure"
+        cookie
+      end
+      headers["Set-Cookie"] = cookies.join("\n")
     end
 
     [status, headers, response]
