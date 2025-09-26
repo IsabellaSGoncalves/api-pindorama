@@ -75,14 +75,19 @@ Rails.application.configure do
   # Only use :id for inspections in production.
   config.active_record.attributes_for_inspect = [ :id ]
 
-  # Enable DNS rebinding protection and other `Host` header attacks.
-  # config.hosts = [
-  #   "example.com",     # Allow requests from example.com
-  #   /.*\.example\.com/ # Allow requests from subdomains like `www.example.com`
-  # ]
-  #
-  # Skip DNS rebinding protection for the default health check endpoint.
-  # config.host_authorization = { exclude: ->(request) { request.path == "/up" } }
+    # Enable DNS rebinding protection and other `Host` header attacks.
+    # config.hosts = [
+    #   "example.com",     # Allow requests from example.com
+    #   /.*\.example\.com/ # Allow requests from subdomains like `www.example.com`
+    # ]
+    #
+    # Skip DNS rebinding protection for the default health check endpoint.
+    # config.host_authorization = { exclude: ->(request) { request.path == "/up" } }
+    # config.session_store :cookie_store,
+    # key: "_pindorama_session",
+    # same_site: :none,
+    # secure: true,
+    # expire_after: 4.hours
   config.hosts << "api-pindorama.onrender.com"
   config.hosts << /.*\.onrender\.com/
 end

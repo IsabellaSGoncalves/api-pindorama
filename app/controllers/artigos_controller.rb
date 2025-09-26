@@ -45,6 +45,12 @@ class ArtigosController < ApplicationController
 
   # DELETE /artigos/1
   def destroy
+    if @artigo.url_imagem.present?
+      # extrai o public_id da url(Opção dois onde nao armazenamos o public_id da imagem no proprio artigo)
+      public_id = @artigo.url_imagem.split("/")[-1].split(".")[0]
+      Cloudinary::Uploader.destroy(public_id)
+    end
+
     @artigo.destroy!
   end
 
