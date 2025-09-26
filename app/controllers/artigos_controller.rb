@@ -56,6 +56,6 @@ class ArtigosController < ApplicationController
 
     # Only allow a list of trusted parameters through.
     def artigo_params
-      params.require(artigo: [ :titulo, :conteudo, :local, :data, :autor_id, :status, { tags: [] } ])
+      params.require(:artigo).permit(:titulo, :conteudo, :local, :data, :autor_id, :status, tags: [])
     end
 end
