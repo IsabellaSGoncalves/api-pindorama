@@ -83,11 +83,11 @@ Rails.application.configure do
     #
     # Skip DNS rebinding protection for the default health check endpoint.
     # config.host_authorization = { exclude: ->(request) { request.path == "/up" } }
-    config.session_store :cookie_store,
-    key: "_pindorama_session",
-    same_site: :none,
-    secure: true,
-    expire_after: 4.hours
+    # config.session_store :cookie_store,
+    # key: "_pindorama_session",
+    # same_site: :none,
+    # secure: true,
+    # expire_after: 4.hours
   config.hosts << "api-pindorama.onrender.com"
   config.hosts << /.*\.onrender\.com/
 end
