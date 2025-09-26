@@ -36,10 +36,32 @@ class ArtigosController < ApplicationController
 
   # PATCH/PUT /artigos/1
   def update
-    if @artigo.update(artigo_params)
-      render json: @artigo
+    uploaded_image = params[:imagem]
+
+    if uploaded_image.present?
+      # Se já existe imagem, remove a antiga
+      if @artigo.url_imagem.present?
+        public_id = @artigo.url_imagem.split("/")[-1].split(".")[0]
+        Cloudinary::Uploader.destroy(public_id)
+      end
+
+      # Faz upload da nova imagem
+      result = Cloudinary::Uploader.upload(uploaded_image)
+      image_url = result["secure_url"]
+
+      # Atualiza com a nova URL
+      if @artigo.update(artigo_params.merge(url_imagem: image_url))
+        render json: @artigo
+      else
+        render json: @artigo.errors, status: :unprocessable_entity
+      end
     else
-      render json: @artigo.errors, status: :unprocessable_entity
+      # Atualiza só os outros campos
+      if @artigo.update(artigo_params)
+        render json: @artigo
+      else
+        render json: @artigo.errors, status: :unprocessable_entity
+      end
     end
   end
 
