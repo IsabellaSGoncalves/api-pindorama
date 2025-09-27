@@ -3,8 +3,11 @@ class ArtigosController < ApplicationController
 
   # GET /artigos
   def index
-    @artigos = Artigo.all
-
+    if params[:autor_id].present?
+      @artigos = Artigo.where(autor_id: params[:autor_id])
+    else
+      @artigos = Artigo.all
+    end
     render json: @artigos
   end
 
