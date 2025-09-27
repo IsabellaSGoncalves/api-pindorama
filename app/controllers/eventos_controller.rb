@@ -3,8 +3,11 @@ class EventosController < ApplicationController
 
   # GET /eventos
   def index
-    @eventos = Evento.all
-
+    if params[:autor_id].present?
+      @eventos = Evento.where(autor_id: params[:autor_id])
+    else
+      @eventos = Evento.all
+    end
     render json: @eventos
   end
 
