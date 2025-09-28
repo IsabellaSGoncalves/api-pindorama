@@ -13,3 +13,13 @@ module ActiveSupport
     # Add more helper methods to be used by all tests here...
   end
 end
+
+# --- MOCK DO CLOUDINARY PARA TESTES ---
+module Cloudinary
+  class Uploader
+    def self.destroy(public_id, options = {})
+      # finge que deletou a imagem sem chamar a API real
+      { "result" => "ok" }
+    end
+  end
+end
