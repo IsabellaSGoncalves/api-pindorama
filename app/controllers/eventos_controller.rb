@@ -87,8 +87,6 @@ class EventosController < ApplicationController
 
     # Only allow a list of trusted parameters through.
     def evento_params
-      # Adaptação para Eventos: inclui data e remove 'tags' se não for necessário.
-      # Se precisar de tags, substitua :tags por :tags: [].
       params.require(:evento).permit(:titulo, :conteudo, :local, :data, :autor_id, :status)
     end
 
