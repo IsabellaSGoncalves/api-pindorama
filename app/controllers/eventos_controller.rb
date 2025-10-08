@@ -82,12 +82,12 @@ class EventosController < ApplicationController
   private
     # Use callbacks to share common setup or constraints between actions.
     def set_evento
-      @evento = Evento.find(params[:id]) # Corrigido para params[:id]
+      @evento = Evento.find(params[:id])
     end
 
     # Only allow a list of trusted parameters through.
     def evento_params
-      params.require(:evento).permit(:titulo, :conteudo, :local, :data, :autor_id, :status)
+      params.require(:evento).permit(:titulo, :conteudo, :local, :data, :autor_id, :status, :url_imagem, tags: [])
     end
 
     # Método para extrair public_id de qualquer URL do Cloudinary
