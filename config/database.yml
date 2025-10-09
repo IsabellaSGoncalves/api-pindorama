@@ -26,6 +26,7 @@ development:
   encoding: unicode
   pool: <%= ENV.fetch("RAILS_MAX_THREADS") { 5 } %>
   prepared_statements: false
+  sslmode: require
 
   # The specified database role being used to connect to PostgreSQL.
   # To create additional roles in PostgreSQL see `$ createuser --help`.
@@ -82,8 +83,9 @@ test:
 # for a full overview on how database connection configuration can be specified.
 #
 production:
- url: <%= ENV['DATABASE_URL'] %>
- adapter: postgresql
- encoding: unicode
- pool: <%= ENV.fetch("RAILS_MAX_THREADS") { 5 } %>
- prepared_statements: false
+  url: <%= ENV['DATABASE_URL'] %>
+  adapter: postgresql
+  encoding: unicode
+  pool: <%= ENV.fetch("RAILS_MAX_THREADS") { 5 } %>
+  prepared_statements: false
+  sslmode: require
