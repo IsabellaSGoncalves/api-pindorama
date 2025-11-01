@@ -106,3 +106,4 @@ class EventosController < ApplicationController
     public_id
   end
 end
+#ajustando
