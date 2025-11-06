@@ -1,9 +1,12 @@
+# Ruby é ORM, logo aqui estão consultas SQL sem usar SQL, isso é possivel pelo Active Record
+
 class ArtigosController < ApplicationController
   before_action :set_artigo, only: %i[ show update destroy ]
 
   # GET /artigos
   def index
-    if params[:autor_id].present?
+    if params[:autor_id].present? #adicionando o parametro id_Autor /eventos?autor_id=7
+      # EAGER LOADING ocupa mais memoria, aqui não é necessaria.
       @artigos = Artigo.where(autor_id: params[:autor_id])
     else
       @artigos = Artigo.all
@@ -13,7 +16,9 @@ class ArtigosController < ApplicationController
 
   # GET /artigos/1
   def show
-    render json: @artigo
+    # EAGER LOADING aqui é necessario, pois na tela detalhes vemos a autora!
+    # Inclui dados do autor na resposta JSON criando um array retorna autor: {id: X, nome: "Nome"}
+    render json: @artigo.as_json(include: { autor: { only: [:id, :nome]}})
   end
 
   # POST /artigos
