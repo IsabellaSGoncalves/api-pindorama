@@ -6,11 +6,15 @@ services:
       - .:/rails_app
     ports:
       - "3000:3000"
+      
+    ## Linha comentada para que o rails inicie sem o db
     # depends_on:
     #   - db
+    
     env_file:
       - .env
   
+  ## Criação do db localmente
   # db:
   #   image: postgres:15
   #   volumes:
