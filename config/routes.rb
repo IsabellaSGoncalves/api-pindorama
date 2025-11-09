@@ -2,6 +2,8 @@ Rails.application.routes.draw do
   resources :eventos
   resources :artigos
   resources :autors
+  resources :imagens
+  resources :global_settings
 
   namespace :login do
     namespace :api do
