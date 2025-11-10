@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_09_25_020742) do
+ActiveRecord::Schema[8.0].define(version: 2025_11_09_140544) do
   create_schema "auth"
   create_schema "extensions"
   create_schema "graphql"
@@ -26,7 +26,6 @@ ActiveRecord::Schema[8.0].define(version: 2025_09_25_020742) do
   enable_extension "extensions.uuid-ossp"
   enable_extension "graphql.pg_graphql"
   enable_extension "pg_catalog.plpgsql"
-  enable_extension "vault.supabase_vault"
 
   create_table "artigos", force: :cascade do |t|
     t.string "titulo", null: false
@@ -37,7 +36,10 @@ ActiveRecord::Schema[8.0].define(version: 2025_09_25_020742) do
     t.timestamptz "data", default: -> { "timezone('America/Sao_Paulo'::text, now())" }
     t.bigint "autor_id"
     t.string "status", default: "rascunho", null: false
+    t.string "coordenadas"
+    t.bigint "imagen_id"
     t.index ["autor_id"], name: "index_artigos_on_autor_id"
+    t.index ["imagen_id"], name: "index_artigos_on_imagen_id"
   end
 
   create_table "autors", force: :cascade do |t|
@@ -45,6 +47,7 @@ ActiveRecord::Schema[8.0].define(version: 2025_09_25_020742) do
     t.string "foto"
     t.string "email", null: false
     t.string "senha", null: false
+    t.string "sobre"
     t.index ["email"], name: "index_autors_on_email", unique: true
   end
 
@@ -57,9 +60,26 @@ ActiveRecord::Schema[8.0].define(version: 2025_09_25_020742) do
     t.timestamptz "data", null: false
     t.bigint "autor_id"
     t.string "status", default: "rascunho", null: false
+    t.bigint "imagen_id"
     t.index ["autor_id"], name: "index_eventos_on_autor_id"
+    t.index ["imagen_id"], name: "index_eventos_on_imagen_id"
+  end
+
+  create_table "global_settings", force: :cascade do |t|
+    t.string "chave", null: false
+    t.string "valor", null: false
+  end
+
+  create_table "imagens", force: :cascade do |t|
+    t.integer "cloud_id"
+    t.string "creditos"
+    t.string "descricao"
+    t.string "url_imagem", null: false
+    t.index ["cloud_id"], name: "unique_cloundId", unique: true
   end
 
   add_foreign_key "artigos", "autors", on_delete: :nullify
+  add_foreign_key "artigos", "imagens"
   add_foreign_key "eventos", "autors", on_delete: :nullify
+  add_foreign_key "eventos", "imagens"
 end
