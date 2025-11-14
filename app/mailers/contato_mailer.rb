@@ -1,5 +1,5 @@
 class ContatoMailer < ApplicationMailer
-  DEFAULT_FROM = ENV.fetch('MAIL_FROM_ADDRESS') 
+  DEFAULT_FROM = ENV["MAIL_FROM_ADDRESS"] || "test@example.com"
   DEFAULT_TO = 'isabelllacom2l@gmail.com' 
 
   def contato_email(params)
