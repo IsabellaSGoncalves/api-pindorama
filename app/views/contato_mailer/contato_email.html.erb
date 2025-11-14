@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta content='text/html; charset=UTF-8' http-equiv='Content-Type' />
+</head>
+<body>
+    <div style="font-family: Arial, sans-serif; line-height: 1.6; color: #333;">
+        <h1 style="color: #4CAF50;">Nova Mensagem Recebida</h1>
+
+        <p>Alguém deseja seu contato através do Pindorama!</p>
+
+        <table style="width: 100%; border-collapse: collapse; margin-top: 20px;">
+            <tr>
+                <td style="padding: 8px; border: 1px solid #ddd; font-weight: bold; width: 30%;">Nome:</td>
+                <td style="padding: 8px; border: 1px solid #ddd;"><%= @nome %></td>
+            </tr>
+            <tr>
+                <td style="padding: 8px; border: 1px solid #ddd; font-weight: bold;">E-mail:</td>
+                <td style="padding: 8px; border: 1px solid #ddd;"><a href="mailto:<%= @email_remetente %>"><%= @email_remetente %></a></td>
+            </tr>
+        </table>
+        
+        <h3 style="margin-top: 20px;">Mensagem:</h3>
+        <div style="border: 1px solid #eee; padding: 15px; background-color: #f9f9f9; white-space: pre-wrap;">
+            <%= @mensagem %>
+        </div>
+
+        <p style="margin-top: 30px; font-size: 0.8em; color: #777;">Atenciosamente, Pindorama.</p>
+    </div>
+</body>
+</html>
