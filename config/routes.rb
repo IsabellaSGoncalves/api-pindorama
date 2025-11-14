@@ -17,5 +17,7 @@ Rails.application.routes.draw do
     end
   end
 
+  post 'api/contato', to: 'contato#create'
+
   get "up" => "rails/health#show", as: :rails_health_check
 end

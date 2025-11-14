@@ -74,4 +74,21 @@ Rails.application.configure do
   # config.generators.apply_rubocop_autocorrect_after_generate!
   config.hosts << "api-pindorama.onrender.com"
   config.hosts << /.*\.onrender\.com/
+
+  config.action_mailer.raise_delivery_errors = true
+  config.action_mailer.delivery_method = :smtp
+  config.action_mailer.default_url_options = { host: "https://pindorama-cultura.vercel.app" }
+
+  config.action_mailer.smtp_settings = {
+    address:              ENV.fetch("SMTP_ADDRESS"),
+    port:                 ENV.fetch("SMTP_PORT").to_i,
+    user_name:            ENV.fetch("SMTP_USERNAME"),
+    password:             ENV.fetch("SMTP_PASSWORD"),
+    authentication:       "plain",
+    enable_starttls_auto: true
+  }
+
+  config.action_mailer.default_options = {
+    from: ENV.fetch("MAIL_FROM_ADDRESS")
+  }
 end
