@@ -75,19 +75,36 @@ Rails.application.configure do
   # Only use :id for inspections in production.
   config.active_record.attributes_for_inspect = [ :id ]
 
-    # Enable DNS rebinding protection and other `Host` header attacks.
-    # config.hosts = [
-    #   "example.com",     # Allow requests from example.com
-    #   /.*\.example\.com/ # Allow requests from subdomains like `www.example.com`
-    # ]
-    #
-    # Skip DNS rebinding protection for the default health check endpoint.
-    # config.host_authorization = { exclude: ->(request) { request.path == "/up" } }
-    # config.session_store :cookie_store,
-    # key: "_pindorama_session",
-    # same_site: :none,
-    # secure: true,
-    # expire_after: 4.hours
+  # Enable DNS rebinding protection and other `Host` header attacks.
+  # config.hosts = [
+  #   "example.com",     # Allow requests from example.com
+  #   /.*\.example\.com/ # Allow requests from subdomains like `www.example.com`
+  # ]
+  #
+  # Skip DNS rebinding protection for the default health check endpoint.
+  # config.host_authorization = { exclude: ->(request) { request.path == "/up" } }
+  # config.session_store :cookie_store,
+  # key: "_pindorama_session",
+  # same_site: :none,
+  # secure: true,
+  # expire_after: 4.hours
   config.hosts << "api-pindorama.onrender.com"
   config.hosts << /.*\.onrender\.com/
+
+  config.action_mailer.raise_delivery_errors = true
+  config.action_mailer.delivery_method = :smtp
+  config.action_mailer.default_url_options = { host: "https://pindorama-cultura.vercel.app" }
+
+  config.action_mailer.smtp_settings = {
+    address:              ENV.fetch("SMTP_ADDRESS"),
+    port:                 ENV.fetch("SMTP_PORT").to_i,
+    user_name:            ENV.fetch("SMTP_USERNAME"),
+    password:             ENV.fetch("SMTP_PASSWORD"),
+    authentication:       "plain",
+    enable_starttls_auto: true
+  }
+
+  config.action_mailer.default_options = {
+    from: ENV.fetch("MAIL_FROM_ADDRESS")
+  }
 end
