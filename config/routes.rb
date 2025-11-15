@@ -17,6 +17,14 @@ Rails.application.routes.draw do
     end
   end
 
+  namespace :conf do
+    namespace :api do
+      namespace :tts do
+      post "/", to: "tts#create"
+      end
+    end
+  end
+
   post 'api/contato', to: 'contato#create'
 
   get "up" => "rails/health#show", as: :rails_health_check

@@ -1,7 +1,5 @@
 source "https://rubygems.org"
 
-gem 'dotenv-rails', groups: [:development, :test]
-
 # Bundle edge Rails instead: gem "rails", github: "rails/rails", branch: "main"
 gem "rails", "~> 8.0.2", ">= 8.0.2.1"
 # Use postgresql as the database for Active Record
@@ -42,6 +40,11 @@ gem "thruster", require: false
 # gem "rack-cors"
 
 gem 'cloudinary'
+
+gem 'espeak-ruby'
+
+gem 'streamio-ffmpeg' 
+gem 'httparty'     
 
 group :development, :test do
   # Permite carregar variáveis do .env automaticamente no Rails(precisei pra pegar os dados do Cloudinary)
