@@ -1,5 +1,7 @@
-require "espeak"
-include ESpeak
+unless Rails.env.test?
+  require "espeak"
+  include ESpeak
+end
 
 module Conf
   module Api
@@ -15,9 +17,14 @@ module Conf
           filename = "speech-#{SecureRandom.hex(10)}.mp3"
           path = Rails.root.join("tmp", filename)
 
-          speech = ESpeak::Speech.new(text, voice: "brazil-mbrola-4", speed: 140)
-          speech.save(path.to_s)
+          if Rails.env.test?
+            File.write(path, "")
+          else 
+            speech = ESpeak::Speech.new(text, voice: "brazil-mbrola-4", speed: 140)
+            speech.save(path.to_s)
+          end
 
+          
           unless File.exist?(path)
             Rails.logger.error("Arquivo MP3 não foi gerado: #{path}")
             return render json: { error: "Falha ao gerar o áudio" }, status: :internal_server_error
