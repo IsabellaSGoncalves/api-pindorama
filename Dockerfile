@@ -18,12 +18,11 @@ RUN apt-get update -qq && \
         mbrola-br1 \
         mbrola-br2 \
         mbrola-br3 \
-        mbrola-br4 && \
+        mbrola-br4 \
+        ffmpeg && \
     rm -rf /var/lib/apt/lists/*
 
-
 COPY Gemfile Gemfile.lock ./
-
 RUN bundle install
 
 COPY . .
