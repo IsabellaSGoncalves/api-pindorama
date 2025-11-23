@@ -28,4 +28,7 @@ Rails.application.routes.draw do
   post 'api/contato', to: 'contato#create'
 
   get "up" => "rails/health#show", as: :rails_health_check
+
+  # Usada pelo Flask(api-mapa) para atualizar coordenadas
+  patch 'artigos/:id/coordenadas', to: 'artigos#update_coordenadas_interna'
 end

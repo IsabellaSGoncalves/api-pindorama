@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_11_09_140544) do
+ActiveRecord::Schema[8.0].define(version: 2025_11_22_203915) do
   create_schema "auth"
   create_schema "extensions"
   create_schema "graphql"
@@ -36,8 +36,8 @@ ActiveRecord::Schema[8.0].define(version: 2025_11_09_140544) do
     t.timestamptz "data", default: -> { "timezone('America/Sao_Paulo'::text, now())" }
     t.bigint "autor_id"
     t.string "status", default: "rascunho", null: false
-    t.string "coordenadas"
     t.bigint "imagen_id"
+    t.float "coordenadas", default: [], array: true
     t.index ["autor_id"], name: "index_artigos_on_autor_id"
     t.index ["imagen_id"], name: "index_artigos_on_imagen_id"
   end
