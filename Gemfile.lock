@@ -341,6 +341,7 @@ DEPENDENCIES
   debug
   dotenv-rails
   espeak-ruby
+  faraday
   httparty
   jwt
   kamal
