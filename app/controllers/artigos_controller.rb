@@ -84,6 +84,18 @@ class ArtigosController < ApplicationController
     @artigo.destroy!
   end
 
+  def update_coordenadas_interna
+    @artigo = Artigo.find(params[:id])
+    
+    # Usar update_column bypassa callbacks e validações do Model
+    if @artigo.update_column(:coordenadas, params[:coordenadas])
+      head :no_content # Retorna status 204 (No Content)
+    else
+      # Não deve acontecer, mas é bom ter
+      render json: { erro: 'Falha ao atualizar coluna de coordenadas' }, status: :unprocessable_entity
+    end
+  end
+
   private
     # Use callbacks to share common setup or constraints between actions.
     def set_artigo
@@ -91,9 +103,13 @@ class ArtigosController < ApplicationController
     end
 
     # Only allow a list of trusted parameters through.
-    def artigo_params
-      params.require(:artigo).permit(:titulo, :conteudo, :local, :data, :autor_id, :status, tags: [])
-    end
+  def artigo_params
+    # Aceita coordenadas SE a action for a de atualização interna
+    permitidos = [:titulo, :conteudo, :local, :data, :autor_id, :status, tags: []]
+    permitidos << :coordenadas if action_name == 'update_coordenadas_interna'
+    
+    params.require(:artigo).permit(permitidos)
+  end
 
     # Método para extrair public_id de qualquer URL do Cloudinary
     def extract_public_id(url)

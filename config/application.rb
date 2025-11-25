@@ -32,20 +32,20 @@ module Pindorama
     config.middleware.use ActionDispatch::Cookies
     config.middleware.use ActionDispatch::Session::CookieStore
 
-    config.middleware.insert_before 0, Rack::Cors do
-      allow do
-        if Rails.env.development?
-          origins "http://localhost:5173"
-        elsif Rails.env.production?
-          origins ENV["CORS_ORIGIN"] || "*"
-        else
-          origins "https://localhost"
-        end
-        resource "*",
-        headers: :any,
-        methods: [ :get, :post, :options ],
-        credentials: true
-      end
-    end
+    # config.middleware.insert_before 0, Rack::Cors do
+    #   allow do
+    #     if Rails.env.development?
+    #       origins "http://localhost:5173"
+    #     elsif Rails.env.production?
+    #       origins ENV["CORS_ORIGIN"] || "*"
+    #     else
+    #       origins "https://localhost"
+    #     end
+    #     resource "*",
+    #     headers: :any,
+    #     methods: [ :get, :post, :options ],
+    #     credentials: true
+    #   end
+    # end
   end
 end

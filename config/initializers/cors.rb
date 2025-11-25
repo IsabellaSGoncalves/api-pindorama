@@ -7,7 +7,11 @@
 
 Rails.application.config.middleware.insert_before 0, Rack::Cors do
   allow do
-    origins "https://pindorama-cultura.vercel.app", "http://localhost:5173"
+    origins [
+      "https://pindorama-cultura.vercel.app", 
+      "http://localhost:5173",
+      "https://map-api-k6ot.onrender.com" #talvez necessario deixar * pois não tenho certeza que ele ira permitir requisições do render mapa
+    ]
 
     resource "*",
       headers: :any,
