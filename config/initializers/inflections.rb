@@ -14,3 +14,11 @@
 # ActiveSupport::Inflector.inflections(:en) do |inflect|
 #   inflect.acronym "RESTful"
 # end
+
+ActiveSupport::Inflector.inflections(:en) do |inflect|
+  # Mantenha quaisquer outras regras que você possa ter aqui.
+  
+  # Adiciona uma regra de pluralização irregular
+  # Diga ao Rails: o singular 'imagem' tem o plural 'imagens'
+  inflect.irregular 'imagem', 'imagens'
+end
