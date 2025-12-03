@@ -1,6 +1,7 @@
 # 🌵 Pindorama API
 
-Uma API RESTful desenvolvida com Ruby on Rails, utilizando PostgreSQL como banco de dados e Docker para garantir o desenvolvimento da aplicação Pindorama, uma aplicação web, especializada em difundir conteúdos sobre o Patrimônio Cultural Imaterial Brasileiro.
+
+(delete)Uma API RESTful desenvolvida com Ruby on Rails, utilizando PostgreSQL como banco de dados e Docker para garantir o desenvolvimento da aplicação Pindorama, uma aplicação web, especializada em difundir conteúdos sobre o Patrimônio Cultural Imaterial Brasileiro.
 
 
 ## 🚀 Tecnologias
