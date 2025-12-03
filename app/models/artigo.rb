@@ -1,6 +1,8 @@
 class Artigo < ApplicationRecord
   belongs_to :autor, optional: true
-  belongs_to :imagem, optional: true, dependent: :destroy
+  belongs_to :imagem, optional: true, foreign_key: 'imagen_id'
+
+  accepts_nested_attributes_for :imagem, reject_if: :all_blank, allow_destroy: true
 
   after_commit :gerar_coordenadas_se_necessario, on: [:create, :update]
 

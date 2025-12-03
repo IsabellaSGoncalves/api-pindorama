@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_11_22_203915) do
+ActiveRecord::Schema[8.0].define(version: 2025_12_03_024222) do
   create_schema "auth"
   create_schema "extensions"
   create_schema "graphql"
@@ -71,7 +71,7 @@ ActiveRecord::Schema[8.0].define(version: 2025_11_22_203915) do
   end
 
   create_table "imagens", force: :cascade do |t|
-    t.integer "cloud_id"
+    t.string "cloud_id"
     t.string "creditos"
     t.string "descricao"
     t.string "url_imagem", null: false
@@ -79,7 +79,7 @@ ActiveRecord::Schema[8.0].define(version: 2025_11_22_203915) do
   end
 
   add_foreign_key "artigos", "autors", on_delete: :nullify
-  add_foreign_key "artigos", "imagens"
+  add_foreign_key "artigos", "imagens", column: "imagen_id"
   add_foreign_key "eventos", "autors", on_delete: :nullify
-  add_foreign_key "eventos", "imagens"
+  add_foreign_key "eventos", "imagens", column: "imagen_id"
 end
